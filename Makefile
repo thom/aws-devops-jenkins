@@ -26,7 +26,7 @@ lint:
 	# This is linter for Dockerfiles
 	hadolint Dockerfile
 	# This is a linter for HTML code: http://www.html-tidy.org/
-	tidy -q -e app/*.html
+	tidy -q -e --drop-empty-elements no app/*.html
 	# This is a linter for Python source code: https://www.pylint.org/
 	# This should be run from inside a virtualenv
 	#pylint --disable=R,C,W1203 app.py

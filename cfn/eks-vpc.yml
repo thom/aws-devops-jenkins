@@ -9,6 +9,10 @@ Description: >
 
 # Parameters
 Parameters:
+  EnvironmentName:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+
   VpcBlock:
     Type: String
     Default: 192.168.0.0/16
@@ -57,7 +61,7 @@ Resources:
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}-VPC"
+          Value: !Sub "${EnvironmentName}-VPC"
 
   InternetGateway:
     Type: "AWS::EC2::InternetGateway"
@@ -137,7 +141,7 @@ Resources:
       SubnetId: !Ref PublicSubnet01
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}-NatGatewayAZ1"
+          Value: !Sub "${EnvironmentName}-NatGatewayAZ1"
 
   NatGateway02:
     DependsOn:
@@ -150,7 +154,7 @@ Resources:
       SubnetId: !Ref PublicSubnet02
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}-NatGatewayAZ2"
+          Value: !Sub "${EnvironmentName}-NatGatewayAZ2"
 
   NatGatewayEIP1:
     DependsOn:
@@ -183,7 +187,7 @@ Resources:
         Ref: VPC
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}-PublicSubnet01"
+          Value: !Sub "${EnvironmentName}-PublicSubnet01"
         - Key: kubernetes.io/role/elb
           Value: 1
 
@@ -204,7 +208,7 @@ Resources:
         Ref: VPC
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}-PublicSubnet02"
+          Value: !Sub "${EnvironmentName}-PublicSubnet02"
         - Key: kubernetes.io/role/elb
           Value: 1
 
@@ -224,7 +228,7 @@ Resources:
         Ref: VPC
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}-PrivateSubnet01"
+          Value: !Sub "${EnvironmentName}-PrivateSubnet01"
         - Key: kubernetes.io/role/internal-elb
           Value: 1
 
@@ -244,7 +248,7 @@ Resources:
         Ref: VPC
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}-PrivateSubnet02"
+          Value: !Sub "${EnvironmentName}-PrivateSubnet02"
         - Key: kubernetes.io/role/internal-elb
           Value: 1
 
@@ -277,6 +281,9 @@ Resources:
     Properties:
       GroupDescription: Cluster communication with worker nodes
       VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "${EnvironmentName}-ControlPlaneSecurityGroup"
 
 # Outputs
 Outputs:
@@ -292,11 +299,17 @@ Outputs:
           !Ref PrivateSubnet02,
         ],
       ]
+    Export:
+      Name: !Sub ${EnvironmentName}-SubnetIds
 
   SecurityGroups:
     Description: Security group for the cluster control plane communication with worker nodes
     Value: !Join [",", [!Ref ControlPlaneSecurityGroup]]
+    Export:
+      Name: !Sub ${EnvironmentName}-SecurityGroup
 
   VpcId:
     Description: The VPC Id
     Value: !Ref VPC
+    Export:
+      Name: !Sub ${EnvironmentName}-VpcId

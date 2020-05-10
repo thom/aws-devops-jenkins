@@ -8,6 +8,12 @@ Description: >
 
   https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html
 
+# Parameters
+Parameters:
+  EnvironmentName:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+
 # Mappings
 Mappings:
   ServicePrincipals:
@@ -41,3 +47,5 @@ Outputs:
   NodeInstanceRole:
     Description: The node instance role
     Value: !GetAtt NodeInstanceRole.Arn
+    Export:
+      Name: !Sub "${EnvironmentName}-NodeInstanceRole"

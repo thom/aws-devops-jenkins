@@ -29,10 +29,17 @@ pipeline {
     stage('Push image') {
       steps {
         script {
-          docker.withRegistry( '', registryCredential ) {
+          docker.withRegistry('', registryCredential) {
             dockerImage.push()
           }
         }
+      }
+    }
+
+    stage('Clean-up local images') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+        sh "docker rmi nginx:alpine"
       }
     }
   }

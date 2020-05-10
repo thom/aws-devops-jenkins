@@ -46,7 +46,7 @@ pipeline {
     stage('Deploy to EKS') {
       steps {
         withAWS(region: 'us-west-2', credentials: 'aws_devops') {
-          sh 'echo "Deploy to EKS"'
+          sh 'aws eks update-kubeconfig --name cloud-developer-nanodegree-eks-cluster --region us-west-2'
         }
       }
     }

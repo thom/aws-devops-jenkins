@@ -46,7 +46,9 @@ pipeline {
     stage('Deploy to EKS') {
       steps {
         withAWS(region: 'us-west-2', credentials: 'aws_devops') {
-          sh 'aws eks update-kubeconfig --name cloud-developer-nanodegree-eks-cluster --region us-west-2'
+          // sh "kubectl apply -f k8s/deploy.yaml"
+          // sh "kubectl apply -f k8s/service.yaml"
+          // sh "kubectl get svc"
         }
       }
     }

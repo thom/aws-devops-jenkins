@@ -8,7 +8,7 @@ pipeline {
   agent any
 
   stages {
-    stage('Linting') {
+    stage('Lint source code') {
       steps {
         echo 'Linting Dockerfile'
         sh 'hadolint Dockerfile'
@@ -18,7 +18,7 @@ pipeline {
       }
     }
 
-    stage("Build image") {
+    stage("Build Docker image") {
       steps {
         script {
           dockerImage = docker.build registry + ":$BUILD_NUMBER"
@@ -26,7 +26,7 @@ pipeline {
       }
     }
 
-    stage('Push image') {
+    stage('Push Docker image') {
       steps {
         script {
           docker.withRegistry('', registryCredential) {
@@ -36,8 +36,8 @@ pipeline {
       }
     }
 
-    stage('Clean-up local images') {
-      steps{
+    stage('Clean-up Docker local images') {
+      steps {
         sh "docker rmi $registry:$BUILD_NUMBER"
         sh "docker rmi nginx:alpine"
       }

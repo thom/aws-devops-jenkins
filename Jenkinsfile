@@ -1,7 +1,7 @@
 pipeline {
   environment {
     registry = 'ikhono/cloud-developer-nanodegree'
-    registryCredential = 'dockerhub_id'
+    registryCredentials = 'dockerhub_id'
     dockerImage = ''
   }
 
@@ -29,7 +29,7 @@ pipeline {
     stage('Push Docker image') {
       steps {
         script {
-          docker.withRegistry('', registryCredential) {
+          docker.withRegistry('', registryCredentials) {
             dockerImage.push()
           }
         }
@@ -40,6 +40,14 @@ pipeline {
       steps {
         sh "docker rmi $registry:$BUILD_NUMBER"
         sh "docker rmi nginx:alpine"
+      }
+    }
+
+    stage('Deploy to EKS') {
+      steps {
+        withAWS(region: 'us-west-2', credentials: 'aws_devops') {
+          sh 'echo "Deploy to EKS"'
+        }
       }
     }
   }

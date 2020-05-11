@@ -47,7 +47,7 @@ pipeline {
       steps {
         withAWS(region: 'us-west-2', credentials: 'aws_devops') {
           sh "aws eks --region us-west-2 update-kubeconfig --name cicd-capstone-EksCluster"
-          sh "kubectl apply -f k8s/deployment.yaml"
+          sh "kubectl apply -f k8s/deployment.yml"
           sh "kubectl get svc"
         }
       }

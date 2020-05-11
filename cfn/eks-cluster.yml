@@ -29,10 +29,14 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+      Tags:
+        - Key: Name
+          Value: !Sub "${EnvironmentName}-EksClusterRole"
 
-  EKSCluster:
+  EksCluster:
     Type: AWS::EKS::Cluster
     Properties:
+      Name: !Sub "${EnvironmentName}-EksCluster"
       Version: "1.14"
       RoleArn: !GetAtt EksClusterRole.Arn
       ResourcesVpcConfig:
@@ -52,8 +56,8 @@ Outputs:
     Export:
       Name: !Sub ${EnvironmentName}-RoleArn
 
-  EksClusterId:
-    Description: EKS cluster ID
-    Value: !Ref EKSCluster
+  EksClusterName:
+    Description: EKS cluster name
+    Value: !Ref EksCluster
     Export:
-      Name: !Sub ${EnvironmentName}-EksClusterId
+      Name: !Sub ${EnvironmentName}-EksClusterName

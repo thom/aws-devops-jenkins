@@ -9,9 +9,9 @@ Description: >
 
 # Parameters
 Parameters:
-  EnvironmentName:
-    Description: An environment name that will be prefixed to resource names
+  StackName:
     Type: String
+    Description: Stack name that will be prefixed to resource names
 
 # Resources
 Resources:
@@ -31,22 +31,22 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
       Tags:
         - Key: Name
-          Value: !Sub "${EnvironmentName}-EksClusterRole"
+          Value: !Sub "${StackName}-EksClusterRole"
 
   EksCluster:
     Type: AWS::EKS::Cluster
     Properties:
-      Name: !Sub "${EnvironmentName}-EksCluster"
+      Name: !Sub "${StackName}-EksCluster"
       Version: "1.14"
       RoleArn: !GetAtt EksClusterRole.Arn
       ResourcesVpcConfig:
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${EnvironmentName}-SecurityGroup
+          - Fn::ImportValue: !Sub ${StackName}-SecurityGroup
         SubnetIds:
           Fn::Split:
             - ","
             - Fn::ImportValue:
-                Fn::Sub: ${EnvironmentName}-SubnetIds
+                Fn::Sub: ${StackName}-SubnetIds
 
 # Outputs
 Outputs:
@@ -54,10 +54,10 @@ Outputs:
     Description: The role that Amazon EKS will use to create AWS resources for Kubernetes clusters
     Value: !GetAtt EksClusterRole.Arn
     Export:
-      Name: !Sub ${EnvironmentName}-RoleArn
+      Name: !Sub ${StackName}-RoleArn
 
   EksClusterName:
     Description: EKS cluster name
     Value: !Ref EksCluster
     Export:
-      Name: !Sub ${EnvironmentName}-EksClusterName
+      Name: !Sub ${StackName}-EksClusterName

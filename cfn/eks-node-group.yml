@@ -26,9 +26,9 @@ Metadata:
 
 # Parameters
 Parameters:
-  EnvironmentName:
-    Description: An environment name that will be prefixed to resource names
+  StackName:
     Type: String
+    Description: Stack name that will be prefixed to resource names
 
   BootstrapArguments:
     Type: String
@@ -124,10 +124,10 @@ Resources:
         - Key: !Sub
             - "kubernetes.io/cluster/${EksCluster}"
             - EksCluster:
-                Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterName"
+                Fn::ImportValue: !Sub "${StackName}-EksClusterName"
           Value: owned
       VpcId:
-        Fn::ImportValue: !Sub ${EnvironmentName}-VpcId
+        Fn::ImportValue: !Sub ${StackName}-VpcId
 
   NodeSecurityGroupIngress:
     Type: "AWS::EC2::SecurityGroupIngress"
@@ -147,7 +147,7 @@ Resources:
       Description: Allow pods to communicate with the cluster API Server
       FromPort: 443
       GroupId:
-        Fn::ImportValue: !Sub "${EnvironmentName}-SecurityGroup"
+        Fn::ImportValue: !Sub "${StackName}-SecurityGroup"
       IpProtocol: tcp
       SourceSecurityGroupId: !Ref NodeSecurityGroup
       ToPort: 443
@@ -160,7 +160,7 @@ Resources:
       DestinationSecurityGroupId: !Ref NodeSecurityGroup
       FromPort: 1025
       GroupId:
-        Fn::ImportValue: !Sub "${EnvironmentName}-SecurityGroup"
+        Fn::ImportValue: !Sub "${StackName}-SecurityGroup"
       IpProtocol: tcp
       ToPort: 65535
 
@@ -172,7 +172,7 @@ Resources:
       DestinationSecurityGroupId: !Ref NodeSecurityGroup
       FromPort: 443
       GroupId:
-        Fn::ImportValue: !Sub "${EnvironmentName}-SecurityGroup"
+        Fn::ImportValue: !Sub "${StackName}-SecurityGroup"
       IpProtocol: tcp
       ToPort: 443
 
@@ -185,7 +185,7 @@ Resources:
       GroupId: !Ref NodeSecurityGroup
       IpProtocol: tcp
       SourceSecurityGroupId:
-        Fn::ImportValue: !Sub "${EnvironmentName}-SecurityGroup"
+        Fn::ImportValue: !Sub "${StackName}-SecurityGroup"
       ToPort: 65535
 
   NodeSecurityGroupFromControlPlaneOn443Ingress:
@@ -197,7 +197,7 @@ Resources:
       GroupId: !Ref NodeSecurityGroup
       IpProtocol: tcp
       SourceSecurityGroupId:
-        Fn::ImportValue: !Sub "${EnvironmentName}-SecurityGroup"
+        Fn::ImportValue: !Sub "${StackName}-SecurityGroup"
       ToPort: 443
 
   NodeLaunchConfig:
@@ -229,7 +229,7 @@ Resources:
                     --resource NodeGroup  \
                     --region ${AWS::Region}
           - EksCluster:
-              Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterName"
+              Fn::ImportValue: !Sub "${StackName}-EksClusterName"
 
   NodeGroup:
     Type: "AWS::AutoScaling::AutoScalingGroup"
@@ -244,18 +244,18 @@ Resources:
           Value: !Sub
             - "${EksCluster}-${NodeGroupName}-Node"
             - EksCluster:
-                Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterName"
+                Fn::ImportValue: !Sub "${StackName}-EksClusterName"
         - Key: !Sub
             - "kubernetes.io/cluster/${EksCluster}"
             - EksCluster:
-                Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterName"
+                Fn::ImportValue: !Sub "${StackName}-EksClusterName"
           PropagateAtLaunch: "true"
           Value: owned
       VPCZoneIdentifier:
         Fn::Split:
           - ","
           - Fn::ImportValue:
-              Fn::Sub: ${EnvironmentName}-SubnetIds
+              Fn::Sub: ${StackName}-SubnetIds
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MaxBatchSize: 1
@@ -268,16 +268,16 @@ Outputs:
     Description: The node instance role
     Value: !GetAtt NodeInstanceRole.Arn
     Export:
-      Name: !Sub ${EnvironmentName}-NodeInstanceRole
+      Name: !Sub ${StackName}-NodeInstanceRole
 
   NodeSecurityGroup:
     Description: The security group for the node group
     Value: !Ref NodeSecurityGroup
     Export:
-      Name: !Sub ${EnvironmentName}-NodeSecurityGroup
+      Name: !Sub ${StackName}-NodeSecurityGroup
 
   NodeAutoScalingGroup:
     Description: The autoscaling group
     Value: !Ref NodeGroup
     Export:
-      Name: !Sub ${EnvironmentName}-NodeAutoScalingGroup
+      Name: !Sub ${StackName}-NodeAutoScalingGroup

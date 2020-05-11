@@ -22,9 +22,9 @@ Metadata:
 
 # Parameters
 Parameters:
-  EnvironmentName:
-    Description: An environment name that will be prefixed to resource names
+  StackName:
     Type: String
+    Description: Stack name that will be prefixed to resource names
 
   VpcBlock:
     Type: String
@@ -33,22 +33,22 @@ Parameters:
 
   PublicSubnet01Block:
     Type: String
-    Default: 192.168.0.0/18
+    Default: 192.168.0.0/24
     Description: CidrBlock for public subnet 01 within the VPC
 
   PublicSubnet02Block:
     Type: String
-    Default: 192.168.64.0/18
+    Default: 192.168.1.0/24
     Description: CidrBlock for public subnet 02 within the VPC
 
   PrivateSubnet01Block:
     Type: String
-    Default: 192.168.128.0/18
+    Default: 192.168.2.0/24
     Description: CidrBlock for private subnet 01 within the VPC
 
   PrivateSubnet02Block:
     Type: String
-    Default: 192.168.192.0/18
+    Default: 192.168.3.0/24
     Description: CidrBlock for private subnet 02 within the VPC
 
 # Resources
@@ -61,7 +61,7 @@ Resources:
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: !Sub "${EnvironmentName}-VPC"
+          Value: !Sub ${StackName}-VPC
 
   InternetGateway:
     Type: "AWS::EC2::InternetGateway"
@@ -141,7 +141,7 @@ Resources:
       SubnetId: !Ref PublicSubnet01
       Tags:
         - Key: Name
-          Value: !Sub "${EnvironmentName}-NatGatewayAZ1"
+          Value: !Sub ${StackName}-NatGatewayAZ1
 
   NatGateway02:
     DependsOn:
@@ -154,7 +154,7 @@ Resources:
       SubnetId: !Ref PublicSubnet02
       Tags:
         - Key: Name
-          Value: !Sub "${EnvironmentName}-NatGatewayAZ2"
+          Value: !Sub ${StackName}-NatGatewayAZ2
 
   NatGatewayEIP1:
     DependsOn:
@@ -187,9 +187,7 @@ Resources:
         Ref: VPC
       Tags:
         - Key: Name
-          Value: !Sub "${EnvironmentName}-PublicSubnet01"
-        - Key: kubernetes.io/role/elb
-          Value: 1
+          Value: !Sub ${StackName}-PublicSubnet01
 
   PublicSubnet02:
     Type: AWS::EC2::Subnet
@@ -208,9 +206,7 @@ Resources:
         Ref: VPC
       Tags:
         - Key: Name
-          Value: !Sub "${EnvironmentName}-PublicSubnet02"
-        - Key: kubernetes.io/role/elb
-          Value: 1
+          Value: !Sub ${StackName}-PublicSubnet02
 
   PrivateSubnet01:
     Type: AWS::EC2::Subnet
@@ -228,9 +224,7 @@ Resources:
         Ref: VPC
       Tags:
         - Key: Name
-          Value: !Sub "${EnvironmentName}-PrivateSubnet01"
-        - Key: kubernetes.io/role/internal-elb
-          Value: 1
+          Value: !Sub ${StackName}-PrivateSubnet01
 
   PrivateSubnet02:
     Type: AWS::EC2::Subnet
@@ -248,9 +242,7 @@ Resources:
         Ref: VPC
       Tags:
         - Key: Name
-          Value: !Sub "${EnvironmentName}-PrivateSubnet02"
-        - Key: kubernetes.io/role/internal-elb
-          Value: 1
+          Value: !Sub ${StackName}-PrivateSubnet02
 
   PublicSubnet01RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -281,9 +273,6 @@ Resources:
     Properties:
       GroupDescription: Cluster communication with worker nodes
       VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: !Sub "${EnvironmentName}-ControlPlaneSecurityGroup"
 
 # Outputs
 Outputs:
@@ -300,16 +289,16 @@ Outputs:
         ],
       ]
     Export:
-      Name: !Sub ${EnvironmentName}-SubnetIds
+      Name: !Sub ${StackName}-SubnetIds
 
   SecurityGroups:
     Description: Security group for the cluster control plane communication with worker nodes
-    Value: !Join [",", [!Ref ControlPlaneSecurityGroup]]
+    Value: !Ref ControlPlaneSecurityGroup
     Export:
-      Name: !Sub ${EnvironmentName}-SecurityGroup
+      Name: !Sub ${StackName}-SecurityGroup
 
   VpcId:
     Description: The VPC Id
     Value: !Ref VPC
     Export:
-      Name: !Sub ${EnvironmentName}-VpcId
+      Name: !Sub ${StackName}-VpcId

@@ -38,6 +38,32 @@ Add Docker Hub credentials:
 
 ![Docker Hub credentials](screenshots/jenkins-docker-hub-credentials.png)
 
+## Kubernetes cluster implementation
+
+TBD
+
+## Screenshots
+
+Failed Linting:
+
+![Failed Linting](screenshots/failed-linting.png)
+
+Successful Linting:
+
+![Successful Linting](screenshots/successful-linting.png)
+
+Successful deployment:
+
+![Successful deployment](screenshots/successful-deployment.png)
+
+Cluster:
+
+![Cluster](screenshots/cluster.png)
+
+Deployed website:
+
+![Cluster](screenshots/website.png)
+
 ## Requirements
 
 Graded according to the [Project Rubric](https://review.udacity.com/#!/rubrics/2577/view).

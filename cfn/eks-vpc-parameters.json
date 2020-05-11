@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "StackName",
-    "ParameterValue": "cicd-capstone-stack"
+    "ParameterValue": "cicd-capstone"
   },
   {
     "ParameterKey": "VpcBlock",

@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "StackName",
-    "ParameterValue": "cicd-capstone-stack"
+    "ParameterValue": "cicd-capstone"
   },
   {
     "ParameterKey": "BootstrapArguments",
@@ -17,6 +17,6 @@
   },
   {
     "ParameterKey": "NodeInstanceType",
-    "ParameterValue": "t3.medium"
+    "ParameterValue": "t2.micro"
   }
 ]

@@ -1,6 +1,5 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
-
 Description: >
   Thomas Weibel - Udacity Cloud DevOps Engineer Nanodegree
 
@@ -23,7 +22,6 @@ Metadata:
           - NodeImageIdSSMParam
           - NodeImageId
           - NodeVolumeSize
-          - KeyName
           - BootstrapArguments
 
 # Parameters
@@ -36,10 +34,6 @@ Parameters:
     Type: String
     Default: ""
     Description: "Arguments to pass to the bootstrap script. See files/bootstrap.sh in https://github.com/awslabs/amazon-eks-ami"
-
-  KeyName:
-    Type: "AWS::EC2::KeyPair::KeyName"
-    Description: The EC2 Key Pair to allow SSH access to the instances
 
   NodeAutoScalingGroupDesiredCapacity:
     Type: Number
@@ -130,7 +124,7 @@ Resources:
         - Key: !Sub
             - "kubernetes.io/cluster/${EksCluster}"
             - EksCluster:
-                Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterId"
+                Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterName"
           Value: owned
       VpcId:
         Fn::ImportValue: !Sub ${EnvironmentName}-VpcId
@@ -222,7 +216,6 @@ Resources:
         - Ref: NodeImageId
         - Ref: NodeImageIdSSMParam
       InstanceType: !Ref NodeInstanceType
-      KeyName: !Ref KeyName
       SecurityGroups:
         - Ref: NodeSecurityGroup
       UserData:
@@ -236,7 +229,7 @@ Resources:
                     --resource NodeGroup  \
                     --region ${AWS::Region}
           - EksCluster:
-              Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterId"
+              Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterName"
 
   NodeGroup:
     Type: "AWS::AutoScaling::AutoScalingGroup"
@@ -251,11 +244,11 @@ Resources:
           Value: !Sub
             - "${EksCluster}-${NodeGroupName}-Node"
             - EksCluster:
-                Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterId"
+                Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterName"
         - Key: !Sub
             - "kubernetes.io/cluster/${EksCluster}"
             - EksCluster:
-                Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterId"
+                Fn::ImportValue: !Sub "${EnvironmentName}-EksClusterName"
           PropagateAtLaunch: "true"
           Value: owned
       VPCZoneIdentifier:

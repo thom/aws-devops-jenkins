@@ -1,6 +1,22 @@
 # Udacity Cloud DevOps Engineer Nanodegree Program - Capstone
 
-## TBD
+## Setup Jenkins
+
+[Setup a Jenkins build server](https://aws.amazon.com/getting-started/hands-on/setup-jenkins-build-server/) and install the [Blue Oceans plugin](https://www.jenkins.io/doc/book/blueocean/getting-started/).
+
+Open Blue Ocean and create a new pipeline:
+
+![Create new pipeline](images/blue-ocean-pipelines.png)
+
+Select GitHub:
+
+![Select GitHub](images/blue-ocean-create-pipeline-01.png)
+
+Select the correct repository:
+
+![Select repository](images/blue-ocean-create-pipeline-02.png)
+
+
 
 ## Requirements
 

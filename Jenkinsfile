@@ -45,11 +45,13 @@ pipeline {
 
     stage('Deploy to EKS') {
       steps {
-        withAWS(region: 'us-west-2', credentials: 'aws_devops') {
-          sh "aws eks --region us-west-2 update-kubeconfig --name cicd-capstone-EksCluster"
-          sh "kubectl config use-context arn:aws:eks:us-west-2:853001741663:cluster/cicd-capstone-EksCluster"
-          sh "kubectl apply -f k8s/deployment.yml"
-          sh "kubectl get svc"
+        withAWS(region: 'us-west-2', credentials: 'aws_admin') {
+          sh """
+            aws eks --region us-west-2 update-kubeconfig --name cicd-capstone-EksCluster
+            kubectl config use-context arn:aws:eks:us-west-2:853001741663:cluster/cicd-capstone-EksCluster
+            kubectl apply -f k8s/deployment.yml
+            kubectl get svc
+          """
         }
       }
     }

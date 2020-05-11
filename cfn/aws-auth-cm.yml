@@ -12,7 +12,7 @@ metadata:
 data:
   # <ARN of instance role (not instance profile)>
   mapRoles: |
-    - rolearn: arn:aws:iam::853001741663:role/eks-node-group-stack-NodeInstanceRole-QMZUFMLKTI36
+    - rolearn: arn:aws:iam::853001741663:role/eks-node-group-stack-NodeInstanceRole-9K42PTPW8PMJ
       username: system:node:{{EC2PrivateDNSName}}
       groups:
         - system:bootstrappers

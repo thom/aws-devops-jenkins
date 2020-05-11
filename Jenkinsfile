@@ -47,8 +47,8 @@ pipeline {
       steps {
         withAWS(region: 'us-west-2', credentials: 'aws_devops') {
           sh """
-            aws eks --region us-west-2 update-kubeconfig --name cicd-capstone-EksCluster
-            kubectl config use-context arn:aws:eks:us-west-2:853001741663:cluster/cicd-capstone-EksCluster
+            aws eks --region us-west-2 update-kubeconfig --name capstone-project
+            kubectl config use-context arn:aws:eks:us-west-2:853001741663:cluster/capstone-project
             kubectl apply -f k8s/deployment.yml
             kubectl get svc
           """

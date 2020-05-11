@@ -1,7 +1,3 @@
+#!/bin/bash
 # 1. Create EKS Cluster VPC
-aws cloudformation create-stack\
-  --stack-name eks-vpc-stack\
-  --template-body file://eks-vpc.yml\
-  --parameters file://eks-vpc-parameters.json \
-  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"\
-  --region=us-west-2
+./create-stack.sh eks-vpc-stack eks-vpc.yml eks-vpc-parameters.json

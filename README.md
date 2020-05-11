@@ -40,7 +40,28 @@ Add Docker Hub credentials:
 
 ## Kubernetes cluster implementation
 
-TBD
+The repository contains two Amazon EKS cluster implemenations: CloudFormation script and [eksctl](https://eksctl.io/).
+
+### CloudFormation
+
+Execute the following script in the `cfn` folder:
+
+```
+# Create the network stack
+01-create-vpc-stack.sh 
+
+# Create the EKS cluster stack
+02-create-eks-cluster-stack.s
+
+# Create the EKS node group stack
+03-create-eks-node-group-stack.sh
+```
+
+Also execute `04-aws-auth-cm.sh` to enable worker nodes to join your cluster. Don't forget to replace the ARN of the instance role (not instance profile) with yours in `aws-auth-cm.yml`.
+
+### eksctl
+
+Execute `eksctl.sh` in the `k8s` folder to use [eksctl](https://eksctl.io/) for the Amazon EKS cluster creation.
 
 ## Screenshots
 

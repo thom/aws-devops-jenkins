@@ -1,7 +1,7 @@
 [
   {
-    "ParameterKey": "EnvironmentName",
-    "ParameterValue": "cloud-devops-capstone-project"
+    "ParameterKey": "StackName",
+    "ParameterValue": "cicd-capstone-stack"
   },
   {
     "ParameterKey": "BootstrapArguments",
@@ -9,7 +9,7 @@
   },
   {
     "ParameterKey": "NodeGroupName",
-    "ParameterValue": "cloud-devops-capstone-project-workers"
+    "ParameterValue": "cicd-capstone-workers"
   },
   {
     "ParameterKey": "NodeImageId",

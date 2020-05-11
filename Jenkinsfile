@@ -21,7 +21,7 @@ pipeline {
     stage("Build Docker image") {
       steps {
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          dockerImage = docker.build registry + ":tested"
         }
       }
     }
@@ -38,7 +38,7 @@ pipeline {
 
     stage('Clean-up Docker local images') {
       steps {
-        sh "docker rmi $registry:$BUILD_NUMBER"
+        sh "docker rmi $registry:tested"
         sh "docker rmi nginx:alpine"
       }
     }
@@ -46,9 +46,9 @@ pipeline {
     stage('Deploy to EKS') {
       steps {
         withAWS(region: 'us-west-2', credentials: 'aws_devops') {
-          // sh "kubectl apply -f k8s/deploy.yaml"
-          // sh "kubectl apply -f k8s/service.yaml"
-          // sh "kubectl get svc"
+          sh "aws eks --region us-west-2 update-kubeconfig --name cicd-capstone-EksCluster"
+          sh "kubectl apply -f k8s/deployment.yaml"
+          sh "kubectl get svc"
         }
       }
     }
